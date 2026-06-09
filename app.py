@@ -106,30 +106,35 @@ else:
 if not st.session_state["autenticato"]:
     st.warning("🔒 Inserisci la tua password nel menu laterale per accedere.")
 else:
-   opzioni_menu = ["Home", "I miei Fedelissimi", "Listone Mondiale 2026", "🔥 Invia Buste Chiuse"]
-   if st.session_state["is_admin"]: 
-       opzioni_menu.append("⚙️ Pannello di Controllo Admin")
-       opzioni_menu.append("🔍 ISPEZIONE OUTPUT FEDELISSIMI") # <--- NUOVA VOCE DI MENU
-       
-   menu = st.sidebar.selectbox("Menu Principale", opzioni_menu)
-   
-   tassa_squadra = calcola_tassa_da_file(st.session_state['squadra_loggata'])
-   budget_buste = 100 - tassa_squadra
+    opzioni_menu = ["Home", "I miei Fedelissimi", "Listone Mondiale 2026", "🔥 Invia Buste Chiuse"]
+    if st.session_state["is_admin"]: 
+        opzioni_menu.append("⚙️ Pannello di Controllo Admin")
+        opzioni_menu.append("🔍 ISPEZIONE OUTPUT FEDELISSIMI")
+        
+    menu = st.sidebar.selectbox("Menu Principale", opzioni_menu)
+    
+    tassa_squadra = calcola_tassa_da_file(st.session_state['squadra_loggata'])
+    budget_buste = 100 - tassa_squadra
 
-   # --- CODICE DELLA NUOVA PAGINA DI OUTPUT ---
-   if menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
-       st.write("### 📂 Output delle Scelte dei Fedelissimi Salvate sul Server")
-       if os.path.exists("scelte_fedelissimi.json"):
-           try:
-               with open("scelte_fedelissimi.json", "r") as f:
-                   dati = json.load(f)
-               st.success("✅ File trovato! Ecco l'output delle scelte attuali:")
-               st.json(dati) # Questo ti mostra l'elenco testuale pulito
-           except Exception as e:
-               st.error(f"Errore di lettura del file: {e}")
-       else:
-           st.warning("⚠️ Il file 'scelte_fedelissimi.json' non esiste ancora sul server. Nessun utente ha salvato le spunte.")
-     
+    if menu == "Home":
+        st.info(f"Ciao {st.session_state['utente_loggato']}! Sessione protetta.")
+        st.markdown(f"""
+        - **Tassa Fedelissimi:** 20% sul blocco dei soli giocatori confermati (Arrotondato ad intero matematico reale, es: 5.4 -> **5M**, 4.4 -> **4M**).
+        - **Budget Buste:** 100M Meno la Tassa dei Fedelissimi.
+        """)
+
+    elif menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
+        st.write("### 📂 Output delle Scelte dei Fedelissimi Salvate sul Server")
+        if os.path.exists("scelte_fedelissimi.json"):
+            try:
+                with open("scelte_fedelissimi.json", "r") as f:
+                    dati = json.load(f)
+                st.success("✅ File trovato! Ecco l'output delle scelte attuali:")
+                st.json(dati)
+            except Exception as e:
+                st.error(f"Errore di lettura del file: {e}")
+        else:
+            st.warning("⚠️ Il file 'scelte_fedelissimi.json' non esiste ancora sul server. Nessun utente ha salvato le spunte.")     
      tassa_squadra = calcola_tassa_da_file(st.session_state['squadra_loggata'])
      budget_buste = 100 - tassa_squadra
 
