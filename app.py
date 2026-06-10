@@ -123,18 +123,29 @@ else:
         - **Budget Buste:** 100M Meno la Tassa dei Fedelissimi.
         """)
 
-    elif menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
+  elif menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
         st.write("### 📂 Output delle Scelte dei Fedelissimi Salvate sul Server")
         if os.path.exists("scelte_fedelissimi.json"):
             try:
                 with open("scelte_fedelissimi.json", "r") as f:
-                    dati = json.load(f)
-                st.success("✅ File trovato! Ecco l'output delle scelte attuali:")
-                st.json(dati)
-            except Exception as e:
-                st.error(f"Errore di lettura del file: {e}")
-        else:
-            st.warning("⚠️ Il file 'scelte_fedelissimi.json' non esiste ancora sul server. Nessun utente ha salvato le spunte.")
+                    st.json(json.load(f))
+            except Exception as e: st.error(f"Errore fedelissimi: {e}")
+        else: st.warning("Nessun file fedelissimi.")
+
+        st.markdown("---")
+        st.write("### ✉️ CONTENUTO DETTAGLIATO DI TUTTE LE BUSTE")
+        for u in UTENTI.values():
+            nome_file = f"busta_{u['nome'].lower()}.json"
+            if os.path.exists(nome_file):
+                try:
+                    with open(nome_file, "r") as f:
+                        dati_busta = json.load(f)
+                    st.info(f"📩 Busta di: **{u['nome']}** ({u['squadra']})")
+                    st.json(dati_busta) # Ti stampa a schermo l'offerta esatta e le 7 preferenze per reparto
+                except Exception as e:
+                    st.error(f"Errore lettura busta {u['nome']}: {e}")
+            else:
+                st.warning(f"❌ Nessuna busta trovata per {u['nome']}")
 
     elif menu == "I miei Fedelissimi":
         st.write(f"### 📑 Gestione Fedelissimi - {st.session_state['squadra_loggata']}")
