@@ -123,7 +123,7 @@ else:
         - **Budget Buste:** 100M Meno la Tassa dei Fedelissimi.
         """)
 
-  elif menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
+    elif menu == "🔍 ISPEZIONE OUTPUT FEDELISSIMI" and st.session_state["is_admin"]:
         st.write("### 📂 Output delle Scelte dei Fedelissimi Salvate sul Server")
         if os.path.exists("scelte_fedelissimi.json"):
             try:
@@ -141,7 +141,7 @@ else:
                     with open(nome_file, "r") as f:
                         dati_busta = json.load(f)
                     st.info(f"📩 Busta di: **{u['nome']}** ({u['squadra']})")
-                    st.json(dati_busta) # Ti stampa a schermo l'offerta esatta e le 7 preferenze per reparto
+                    st.json(dati_busta)
                 except Exception as e:
                     st.error(f"Errore lettura busta {u['nome']}: {e}")
             else:
@@ -292,6 +292,12 @@ else:
                         sua_gerarchia = b["gerarchie"][rep]
                         giocatore_vinto = "NESSUNO"
                         if offerta_fatta > 0:
+                             for g_scelto in sua_gerarchia:
+                                 if g_scelto not in giocatori_gia_assegnati and g_scelto in TOP_PLAYERS[rep]:
+                                     giocatore_vinto = g_scelto
+                                     giocatori_gia_assegnati.add(g_scelto)
+                                     break
+                        else:
                              for g_scelto in sua_gerarchia:
                                  if g_scelto not in giocatori_gia_assegnati and g_scelto in TOP_PLAYERS[rep]:
                                      giocatore_vinto = g_scelto
